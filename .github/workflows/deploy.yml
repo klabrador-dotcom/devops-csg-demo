@@ -37,7 +37,7 @@ jobs:
         IMAGE_TAG: ${{ github.sha }} # Uses the commit hash as the version
       run: |
         # Build a docker container and push it to ECR
-        docker build -t $ECR_REGISTRY/${{ secrets.ECR_REPOSITORY_NAME }}:$IMAGE_TAG .
+        docker build -t $ECR_REGISTRY/${{ secrets.ECR_REPOSITORY_NAME }}:$IMAGE_TAG app
         docker push $ECR_REGISTRY/${{ secrets.ECR_REPOSITORY_NAME }}:$IMAGE_TAG
         echo "image=$ECR_REGISTRY/${{ secrets.ECR_REPOSITORY_NAME }}:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
