@@ -1,0 +1,38 @@
+provider "aws" {
+  region = "us-east-1"
+  default_tags {
+    tags = { name = "csgtest" }
+  }
+}
+
+module "networking" {
+  source   = "../../modules/networking"
+  vpc_cidr = "10.0.0.0/16"
+}
+
+module "security" {
+  source = "../../modules/security"
+  vpc_id = module.networking.vpc_id
+}
+
+module "database" {
+  source                = "../../modules/rds"
+  environment           = "test"
+  private_subnet_ids    = module.networking.private_subnets
+  rds_security_group_id = module.security.rds_sg_id
+  db_password           = "PagerDutyDemo2026!" 
+}
+
+module "app_cluster" {
+  source                 = "../../modules/ecs"
+  environment            = "test"
+  db_endpoint            = module.database.db_endpoint
+  execution_role_arn     = module.security.ecs_execution_role_arn
+  ecs_security_group_id  = module.security.ecs_sg_id
+  container_image        = "nginx:latest"
+}
+
+module "ecr" {
+  source      = "../../modules/ecr"
+  environment = "test"
+}

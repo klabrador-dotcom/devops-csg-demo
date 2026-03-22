@@ -1,0 +1,18 @@
+variable "environment" { type = string }
+variable "container_image" { type = string }
+variable "db_endpoint" { type = string }
+
+variable "execution_role_arn" { 
+  type        = string
+  description = "The ARN of the IAM role for ECS execution"
+}
+
+variable "ecs_security_group_id" {
+  type        = string
+  description = "The ID of the security group for ECS tasks"
+}
+
+variable "task_role_arn" { 
+  type    = string 
+  default = null 
+}
